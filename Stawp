@@ -1,0 +1,584 @@
+--//------------------------------------------------------------------------------------------\\--
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+--//------------------------------------------------------------------------------------------\\--
+local function StopAudio()
+    local sound = LocalPlayer.PlayerGui:FindFirstChild("BoomboxSound")
+    if sound then
+        sound:Stop()
+        sound:Destroy()
+        print("Sound stopped and destroyed")
+    end
+end
+
+--//------------------------------------------------------------------------------------------\\--
+local function Play(ID)
+    -- Remove any existing sound to avoid duplication
+    StopAudio()
+
+    -- Create and configure a new Sound instance
+    local sound = Instance.new("Sound")
+    sound.Name = "BoomboxSound"
+    sound.SoundId = "rbxassetid://" .. ID
+    sound.Parent = LocalPlayer.PlayerGui
+    sound.Volume = 0.5
+    sound.PlaybackSpeed = 1
+    sound.Looped = false
+
+    sound:Play()
+
+    print("Playing sound with ID:", ID)
+
+    sound.Ended:Connect(function()
+        StopAudio()
+    end)
+end
+--//------------------------------------------------------------------------------------------\\--
+function chat(msg)
+    local A_1 = msg
+    local A_2 = "All"
+    local Event = game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest
+    Event:FireServer(A_1, A_2)
+end
+--//------------------------------------------------------------------------------------------\\--
+function MoveTo(X,Y,Z)
+    OWNER.Character.HumanoidRootPart.CFrame = OWNER.Character.HumanoidRootPart.CFrame*CFrame.new(X,Y,Z)
+end
+--//-------------------------------------------------------------------------------------\\--
+game.Players.LocalPlayer:GetMouse().KeyDown:connect(function(key)
+    if key == "v" then
+        if Closed == true then
+        Closed = false
+            game.CoreGui["Raymond Is Gay Ad His Mama Left Him"].Enabled = false
+        else
+            Closed = true
+            game.CoreGui["Raymond Is Gay Ad His Mama Left Him"].Enabled = true
+        end
+    elseif key == 'x' then
+        Play(6603980575)
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, -30)
+        TweenService:Create(workspace.CurrentCamera, TweenInfo.new(0.5), {FieldOfView = 85}):Play()
+        TweenService:Create(game:GetService("Lighting").ColorCorrection, TweenInfo.new(0.8), {Saturation = -1}):Play()
+        local blur = Instance.new("BlurEffect", game:GetService("Lighting"))
+        TweenService:Create(blur, TweenInfo.new(0.8), {Size = 10}):Play()
+        wait(0.5)
+        TweenService:Create(workspace.CurrentCamera, TweenInfo.new(0.5), {FieldOfView = 70}):Play()
+        game:GetService("Lighting").ColorCorrection.TintColor = Color3.fromRGB(250, 250, 250)
+        TweenService:Create(blur, TweenInfo.new(0.8), {Size = 0}):Play()
+        wait(0.5)
+        TweenService:Create(game:GetService("Lighting").ColorCorrection, TweenInfo.new(0.8), {Saturation = 0}):Play()
+    end    
+end)
+--//-------------------------------------------------------------------------------------\\--
+
+local Grabbed = false
+        local Up = false
+        
+        local LocalPlayer = game:GetService("Players").LocalPlayer
+        local ActivateTool = Instance.new("Tool",LocalPlayer.Backpack)
+        local Mouse = LocalPlayer:GetMouse()
+        ActivateTool.RequiresHandle = false 
+        ActivateTool.Name = "Activate"
+        ActivateTool.Activated:Connect(function()
+        game:GetService("ReplicatedStorage").MainEvent:FireServer('Grabbing', true)
+        repeat task.wait(0.1)
+        until game.Players.LocalPlayer.Character.BodyEffects.Grabbed.Value ~= nil and game.Players.LocalPlayer.Character.BodyEffects.Grabbed.Value ~= ''
+        if game.Players.LocalPlayer.Character.BodyEffects.Grabbed.Value ~= nil and game.Players.LocalPlayer.Character.BodyEffects.Grabbed.Value ~= '' then
+        local target = tostring(game.Players.LocalPlayer.Character.BodyEffects.Grabbed.Value)
+        Grabbed = true
+        game.Players[target].Character:FindFirstChild('GRABBING_CONSTRAINT').H.Length = 99e99
+        for i, Track in pairs (game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid"):GetPlayingAnimationTracks()) do
+            if Track.Animation.AnimationId == "rbxassetid://11075367458" then
+                Track:Stop()
+            end
+        end 
+        spawn(function()
+        local Animation = Instance.new("Animation")
+        Animation.AnimationId = "rbxassetid://3135389157"
+        local LoadAnimation = game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):LoadAnimation(Animation)
+        LoadAnimation.Priority = Enum.AnimationPriority.Action
+        LoadAnimation:Play()
+        LoadAnimation:AdjustSpeed(0.2)
+        wait(0.8)
+        LoadAnimation:AdjustSpeed(0)
+        end)
+        if game.Players[target].Character.UpperTorso:FindFirstChild("BodyPosition") then
+        game.Players[target].Character.UpperTorso:FindFirstChild("BodyPosition"):Destroy()
+        game.Players[target].Character.UpperTorso:FindFirstChild("BodyGyro"):Destroy()
+        else
+        getfenv().bodypos = Instance.new('BodyPosition', game.Players[target].Character.UpperTorso)
+        getfenv().bodypos.D = 200
+        getfenv().bodypos.MaxForce = Vector3.new(10000,10000,10000)
+        getfenv().bodygyro = Instance.new('BodyGyro', game.Players[target].Character.UpperTorso)
+        getfenv().bodygyro.MaxTorque = Vector3.new(10000,10000,10000)
+        getfenv().bodygyro.D = 100
+        end
+        game:GetService('RunService'):BindToRenderStep("Pos", 0 , function()
+        game.Players[target].Character.UpperTorso.BodyPosition.Position = game.Players.LocalPlayer.Character.RightHand.Position + Vector3.new(0,-0.7,0)
+        game.Players[target].Character.UpperTorso.BodyGyro.CFrame = CFrame.new(game.Players[target].Character.UpperTorso.Position, game.Players.LocalPlayer.Character.HumanoidRootPart.Position)
+        end)
+        else
+        game:GetService('RunService'):UnbindFromRenderStep("Pos")
+        Grabbed = false
+        Up = false
+        game.Players[target].Character.UpperTorso:FindFirstChild("BodyPosition"):Destroy()
+        game.Players[target].Character.UpperTorso:FindFirstChild("BodyGyro"):Destroy()
+        for i, Track in pairs (game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid"):GetPlayingAnimationTracks()) do
+                if Track.Animation.AnimationId == "rbxassetid://3135389157" then
+                    Track:Stop()
+                end
+            end 
+        end
+        game.Players.LocalPlayer.Character.BodyEffects.Grabbed:GetPropertyChangedSignal('Value'):connect(function()
+        if game.Players.LocalPlayer.Character.BodyEffects.Grabbed.Value == nil then 
+        game:GetService('RunService'):UnbindFromRenderStep("Pos")
+        for i, Track in pairs (game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid"):GetPlayingAnimationTracks()) do
+                if Track.Animation.AnimationId == "rbxassetid://3135389157" then
+                Track:Stop()
+                elseif Track.Animation.AnimationId == "rbxassetid://14496531574" then
+                Track:Stop()
+                elseif Track.Animation.AnimationId == "rbxassetid://3096047107" then
+                Track:Stop()
+            end
+        end 
+        end
+        end)
+        end)
+
+local HellTool = Instance.new("Tool", LocalPlayer.Backpack)
+HellTool.RequiresHandle = false 
+HellTool.Name = "Time Stop"
+HellTool.Activated:Connect(function()
+    if Grabbed == true then
+        if Up == false then
+            local target = tostring(game.Players.LocalPlayer.Character.BodyEffects.Grabbed.Value)
+            wait(0.9)
+            for i, Track in pairs(game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid"):GetPlayingAnimationTracks()) do
+                if Track.Animation.AnimationId == "rbxassetid://3135389157" then
+                    Track:Stop()
+                end
+            end
+            game.Players[target].Character.UpperTorso.BodyPosition.D = 1200
+            game:GetService('RunService'):UnbindFromRenderStep("Pos")
+            game:GetService('RunService'):BindToRenderStep("Pos", 0, function()
+                game.Players[target].Character.UpperTorso.BodyGyro.CFrame = CFrame.new(game.Players[target].Character.UpperTorso.Position, game.Players.LocalPlayer.Character.HumanoidRootPart.Position)
+            end)
+            local playerCFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+            game.Players[target].Character.UpperTorso.BodyPosition.Position = playerCFrame.Position + playerCFrame.LookVector * 3 + Vector3.new(0, 1, 0)
+            
+            local Animation = Instance.new("Animation")
+            Animation.AnimationId = "rbxassetid://14774699952"
+            local LoadAnimation = game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):LoadAnimation(Animation)
+            LoadAnimation.Priority = Enum.AnimationPriority.Action
+            LoadAnimation:Play()
+            wait(0.5)
+            LoadAnimation:AdjustSpeed(0.2)
+            Play(6995194838)
+            wait(3.5)
+            Play(6964764259)
+            chat("When the time is stopped, There is only Dio")
+            wait(4.5)
+            Play(6675055864)
+            chat("5 second left...")
+            wait(1.5)
+            chat("4 second left...")
+            wait(1.5)
+            chat("3 second left...")
+            wait(1.5)
+            chat("2 second left...")
+            wait(2)
+            Play(4968518358)
+            Animation.AnimationId = "rbxassetid://8254787838"
+local LoadAnimation1 = game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):LoadAnimation(Animation)
+LoadAnimation1.Priority = Enum.AnimationPriority.Action
+LoadAnimation1:Play()
+LoadAnimation1:AdjustSpeed(5)
+wait(0.3)
+Animation.AnimationId = "rbxassetid://8254789608"
+local LoadAnimation2 = game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):LoadAnimation(Animation)
+LoadAnimation2.Priority = Enum.AnimationPriority.Action
+LoadAnimation2:Play()
+LoadAnimation2:AdjustSpeed(5)
+wait(0.3)
+Animation.AnimationId = "rbxassetid://8254792138"
+local LoadAnimation3 = game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):LoadAnimation(Animation)
+LoadAnimation3.Priority = Enum.AnimationPriority.Action
+LoadAnimation3:Play()
+LoadAnimation3:AdjustSpeed(5)
+wait(0.3)
+Animation.AnimationId = "rbxassetid://8254794168"
+local LoadAnimation4 = game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):LoadAnimation(Animation)
+LoadAnimation4.Priority = Enum.AnimationPriority.Action
+LoadAnimation4:Play()
+LoadAnimation4:AdjustSpeed(5)
+wait(0.3)
+Animation.AnimationId = "rbxassetid://8254787838"
+local LoadAnimation5 = game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):LoadAnimation(Animation)
+LoadAnimation5.Priority = Enum.AnimationPriority.Action
+LoadAnimation5:Play()
+LoadAnimation5:AdjustSpeed(5)
+wait(0.3)
+Animation.AnimationId = "rbxassetid://8254789608"
+local LoadAnimation6 = game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):LoadAnimation(Animation)
+LoadAnimation6.Priority = Enum.AnimationPriority.Action
+LoadAnimation6:Play()
+LoadAnimation6:AdjustSpeed(5)
+wait(0.3)
+Animation.AnimationId = "rbxassetid://8254792138"
+local LoadAnimation7 = game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):LoadAnimation(Animation)
+LoadAnimation7.Priority = Enum.AnimationPriority.Action
+LoadAnimation7:Play()
+LoadAnimation7:AdjustSpeed(5)
+wait(0.3)
+Animation.AnimationId = "rbxassetid://8254794168"
+local LoadAnimation8 = game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):LoadAnimation(Animation)
+LoadAnimation8.Priority = Enum.AnimationPriority.Action
+LoadAnimation8:Play()
+LoadAnimation8:AdjustSpeed(5)
+            wait(0.2)
+            local Animation = Instance.new("Animation")
+            Animation.AnimationId = "rbxassetid://3354696735"
+            local LoadAnimation = game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):LoadAnimation(Animation)
+            LoadAnimation.Priority = Enum.AnimationPriority.Action
+            LoadAnimation:Play()
+            wait(0.1)
+            Play(6191764144)
+            wait(2)
+            Play(7099835652)
+            chat("Zero")
+            wait(3)
+            Play(3084539117)
+            wait(2)
+            game.Players[target].Character.UpperTorso.BodyPosition.Position = playerCFrame.Position + playerCFrame.LookVector * 40 + Vector3.new(0, 1, 0)
+            wait(1)
+            Play(8164951181)
+            game.Players[target].Character.LowerTorso.Position = Vector3.new(0,-600,0)
+            game:GetService('RunService'):UnbindFromRenderStep("Pos")
+            wait(0.2)
+            game.Players[target].Character.UpperTorso:FindFirstChild("BodyPosition"):Destroy()
+            game.Players[target].Character.UpperTorso:FindFirstChild("BodyGyro"):Destroy()
+            wait(0.1)
+            game.Players[target].Character.UpperTorso.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.RightVector * 90
+            game.Players[target].Character.RightUpperLeg.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.RightVector * -90
+            game.Players[target].Character.LeftUpperLeg.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.RightVector * -90
+            wait(2)
+            game:GetService("ReplicatedStorage").MainEvent:FireServer('Grabbing', false)
+        end
+    end
+end)
+
+local LocalPlayer = game:GetService("Players").LocalPlayer
+    local PunchTool = Instance.new("Tool",LocalPlayer.Backpack)
+    local Mouse = LocalPlayer:GetMouse()
+    PunchTool.RequiresHandle = false 
+    PunchTool.Name = "Punch"
+    PunchTool.Activated:Connect(function()
+    if Grabbed == true then
+    if Up == false then
+    local target = tostring(game.Players.LocalPlayer.Character.BodyEffects.Grabbed.Value)
+    wait(0.9)
+    for i, Track in pairs (game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid"):GetPlayingAnimationTracks()) do
+        if Track.Animation.AnimationId == "rbxassetid://3135389157" then
+            Track:Stop()
+        end
+    end
+    game.Players[target].Character.UpperTorso.BodyPosition.D = 1200
+    game:GetService('RunService'):UnbindFromRenderStep("Pos")
+    game:GetService('RunService'):BindToRenderStep("Pos", 0 , function()
+    game.Players[target].Character.UpperTorso.BodyGyro.CFrame = CFrame.new(game.Players[target].Character.UpperTorso.Position, game.Players.LocalPlayer.Character.HumanoidRootPart.Position)
+    end)
+    game.Players[target].Character.UpperTorso.BodyPosition.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position + game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector * 3 + Vector3.new(0, 1 ,0)
+    local Animation = Instance.new("Animation")
+    Animation.AnimationId = "rbxassetid://3354696735"
+    local LoadAnimation = game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):LoadAnimation(Animation)
+    LoadAnimation.Priority = Enum.AnimationPriority.Action
+    LoadAnimation:Play()
+    wait(1)
+    Play(6408655200)
+    game.Players[target].Character.UpperTorso.BodyPosition.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position + game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector * 40 + Vector3.new(0, 1 ,0)
+wait(0.8)
+Play(6603980575)
+local player = game.Players.LocalPlayer
+local character = player.Character
+local targetPlayer = game.Players[target]
+local targetCharacter = targetPlayer.Character
+character.HumanoidRootPart.CFrame = game.Players[target].Character.UpperTorso.CFrame
+wait(1)
+local Animation = Instance.new("Animation")
+    Animation.AnimationId = "rbxassetid://2788306916"
+    local LoadAnimation = game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):LoadAnimation(Animation)
+    LoadAnimation.Priority = Enum.AnimationPriority.Action
+    LoadAnimation:Play()
+    wait(0.5)
+    Play(4766119678)
+            wait(0.5)
+            game.Players[target].Character.UpperTorso:FindFirstChild("BodyPosition"):Destroy()
+            game.Players[target].Character.UpperTorso:FindFirstChild("BodyGyro"):Destroy()
+            game:GetService('RunService'):UnbindFromRenderStep("Pos")
+        for i = 1,2 do
+            wait()
+            Play(8164951181)
+            game.Players[target].Character.UpperTorso.Velocity = Vector3.new(
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector.X * 950,
+    100,
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector.Z * 150
+)
+            wait(0.1)
+            game.Players[target].Character.LowerTorso.Position = Vector3.new(0,-600,0)
+            wait(0.2)
+            game.Players[target].Character.UpperTorso.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.RightVector * 90
+            game.Players[target].Character.RightUpperLeg.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.RightVector * -90
+            game.Players[target].Character.LeftUpperLeg.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.RightVector * -90
+            end         
+            wait(1)
+            game:GetService("ReplicatedStorage").MainEvent:FireServer('Grabbing', false)
+        end
+    end
+end)
+
+local LocalPlayer = game:GetService("Players").LocalPlayer
+local ballsTool = Instance.new("Tool", LocalPlayer.Backpack)
+local Mouse = LocalPlayer:GetMouse()
+ballsTool.RequiresHandle = false 
+ballsTool.Name = "Fly kick"
+
+ballsTool.Activated:Connect(function()
+    if Grabbed == true then
+        if Up == false then
+            local target = tostring(game.Players.LocalPlayer.Character.BodyEffects.Grabbed.Value)
+            wait(0.9)
+
+            for i, Track in pairs(game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid"):GetPlayingAnimationTracks()) do
+                if Track.Animation.AnimationId == "rbxassetid://3135389157" then
+                    Track:Stop()
+                end
+            end
+
+            game.Players[target].Character.UpperTorso.BodyPosition.D = 1200
+            game:GetService('RunService'):UnbindFromRenderStep("Pos")
+            game:GetService('RunService'):BindToRenderStep("Pos", 0, function()
+                game.Players[target].Character.UpperTorso.BodyGyro.CFrame = CFrame.new(game.Players[target].Character.UpperTorso.Position, game.Players.LocalPlayer.Character.HumanoidRootPart.Position)
+            end)
+
+            local Animation = Instance.new("Animation")
+            Animation.AnimationId = "rbxassetid://3096047107"
+            local LoadAnimation = game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):LoadAnimation(Animation)
+            LoadAnimation.Priority = Enum.AnimationPriority.Action
+            LoadAnimation:Play()
+            Play(6543434995)
+            game.Players[target].Character.UpperTorso.BodyPosition.Position = game.Players.LocalPlayer.Character.HumanoidRootPart.Position + game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector * 50 + Vector3.new(0, 20, 0)
+            wait(1)
+
+            local player = game.Players.LocalPlayer
+            local character = player.Character
+            local targetPlayer = game.Players[target]
+            local targetCharacter = targetPlayer.Character
+            character.HumanoidRootPart.CFrame = targetCharacter.UpperTorso.CFrame
+            Play(6603980575)
+            local part = Instance.new("Part")
+            part.Size = Vector3.new(20, 3, 20)
+            part.Name = "Platform"
+            part.Parent = game.Workspace
+            part.Anchored = true  
+            part.CanCollide = true
+            part.Transparency = 1
+
+            if targetCharacter:FindFirstChild("UpperTorso") then
+                part.Position = targetCharacter.UpperTorso.Position - Vector3.new(0, 5, 0)
+            elseif targetCharacter:FindFirstChild("Torso") then
+                part.Position = targetCharacter.Torso.Position - Vector3.new(0, 5, 0)
+            end
+            wait(0.3)
+            local Animation2 = Instance.new("Animation")
+            Animation2.AnimationId = "rbxassetid://2788306916"
+            local LoadAnimation2 = game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):LoadAnimation(Animation2)
+            LoadAnimation2.Priority = Enum.AnimationPriority.Action
+            LoadAnimation2:Play()
+            wait(0.8)
+            Play(4766119678)
+            wait(1)
+            part:Destroy()
+            game.Players[target].Character.UpperTorso:FindFirstChild("BodyPosition"):Destroy()
+            game.Players[target].Character.UpperTorso:FindFirstChild("BodyGyro"):Destroy()
+            game:GetService('RunService'):UnbindFromRenderStep("Pos")
+        for i = 1,2 do
+            wait()  
+            Play(8164951181)
+            game.Players[target].Character.UpperTorso.Velocity = Vector3.new(
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector.X * 950,
+    100,
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector.Z * 150
+)
+            wait(0.1)
+            game.Players[target].Character.LowerTorso.Position = Vector3.new(0,-600,0)
+            wait(0.2)
+            game.Players[target].Character.UpperTorso.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.RightVector * 90
+            game.Players[target].Character.RightUpperLeg.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.RightVector * -90
+            game.Players[target].Character.LeftUpperLeg.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.RightVector * -90
+            end         
+            wait(1)
+            game:GetService("ReplicatedStorage").MainEvent:FireServer('Grabbing', false)
+        end
+    end
+end)
+
+local LocalPlayer = game:GetService("Players").LocalPlayer
+local GyatTool = Instance.new("Tool", LocalPlayer.Backpack)
+GyatTool.RequiresHandle = false 
+GyatTool.Name = "Triple Kicks"
+
+local function stopAnimation(AnimationId)
+    for _, Track in pairs(LocalPlayer.Character:WaitForChild("Humanoid"):GetPlayingAnimationTracks()) do
+        if Track.Animation.AnimationId == AnimationId then
+            Track:Stop()
+        end
+    end
+end
+
+GyatTool.Activated:Connect(function()
+    if Grabbed == true and Up == false then
+        local target = tostring(LocalPlayer.Character.BodyEffects.Grabbed.Value)
+
+        wait(0.9)
+        stopAnimation("rbxassetid://3135389157")
+
+        local targetCharacter = game.Players[target].Character
+        if targetCharacter and targetCharacter:FindFirstChild("UpperTorso") then
+            local UpperTorso = targetCharacter.UpperTorso
+            UpperTorso.BodyPosition.D = 1200
+            
+            game:GetService('RunService'):UnbindFromRenderStep("Pos")
+            game:GetService('RunService'):BindToRenderStep("Pos", 0, function()
+                UpperTorso.BodyGyro.CFrame = CFrame.new(UpperTorso.Position, LocalPlayer.Character.HumanoidRootPart.Position)
+            end)
+
+            UpperTorso.BodyPosition.Position = LocalPlayer.Character.HumanoidRootPart.Position 
+                + LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector * 3 + Vector3.new(0, 1, 0)
+            
+            wait(1)
+            local Animation = Instance.new("Animation")
+            Animation.AnimationId = "rbxassetid://3355740058"
+            local LoadAnimation = LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):LoadAnimation(Animation)
+            LoadAnimation.Priority = Enum.AnimationPriority.Action
+            LoadAnimation:Play()
+            Play(6408655200)
+
+            wait(0.5)
+            UpperTorso.BodyPosition.Position = LocalPlayer.Character.HumanoidRootPart.Position 
+                + LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector * 3 + Vector3.new(0, 30, 0)
+            wait(0.5)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame - game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector * 35
+            Play(6603980575)
+            wait(1.5)
+            LocalPlayer.Character.HumanoidRootPart.CFrame = UpperTorso.CFrame
+            Play(6603980575)
+
+            local part1 = Instance.new("Part")
+            part1.Size = Vector3.new(20, 3, 20)
+            part1.Name = "Platform"
+            part1.Parent = game.Workspace
+            part1.Anchored = true  
+            part1.CanCollide = true
+            part1.Transparency = 1
+
+            if targetCharacter:FindFirstChild("UpperTorso") then
+                part1.Position = targetCharacter.UpperTorso.Position - Vector3.new(0, 5, 0)
+            elseif targetCharacter:FindFirstChild("Torso") then
+                part1.Position = targetCharacter.Torso.Position - Vector3.new(0, 5 ,0)
+            end
+
+            wait(0.5)
+            local Animation2 = Instance.new("Animation")
+            Animation2.AnimationId = "rbxassetid://2788306916"
+            local LoadAnimation2 = LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):LoadAnimation(Animation2)
+            LoadAnimation2.Priority = Enum.AnimationPriority.Action
+            LoadAnimation2:Play()
+
+            wait(0.8)
+            Play(4766119678)
+
+            UpperTorso.BodyPosition.Position = LocalPlayer.Character.HumanoidRootPart.Position 
+                + LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector * 40 + Vector3.new(0, 1, 0)
+
+            wait(1)
+            part1:Destroy()
+
+            LocalPlayer.Character.HumanoidRootPart.CFrame = UpperTorso.CFrame
+            Play(6603980575)
+
+            local part2 = Instance.new("Part")
+            part2.Size = Vector3.new(20, 3, 20)
+            part2.Name = "Platform"
+            part2.Parent = game.Workspace
+            part2.Anchored = true  
+            part2.CanCollide = true
+            part2.Transparency = 1
+
+            if targetCharacter:FindFirstChild("UpperTorso") then
+                part2.Position = targetCharacter.UpperTorso.Position - Vector3.new(0, 5, 0)
+            elseif targetCharacter:FindFirstChild("Torso") then
+                part2.Position = targetCharacter.Torso.Position - Vector3.new(0, 5, 0)
+            end
+
+            wait(0.5)
+            LoadAnimation2:Play()
+
+            wait(0.8)
+            Play(4766119678)
+            UpperTorso.BodyPosition.Position = LocalPlayer.Character.HumanoidRootPart.Position 
+                + LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector * 40 + Vector3.new(0, 1, 0)
+
+            wait(1)
+            part2:Destroy()
+            LocalPlayer.Character.HumanoidRootPart.CFrame = UpperTorso.CFrame
+            Play(6603980575)
+            
+local part3 = Instance.new("Part")
+part3.Size = Vector3.new(20, 3, 20)
+part3.Name = "Platform"
+part3.Parent = game.Workspace
+part3.Anchored = true  
+part3.CanCollide = true
+part3.Transparency = 1
+
+if targetCharacter:FindFirstChild("UpperTorso") then
+    part3.Position = targetCharacter.UpperTorso.Position - Vector3.new(0, 5, 0)
+elseif targetCharacter:FindFirstChild("Torso") then
+    part3.Position = targetCharacter.Torso.Position - Vector3.new(0, 5, 0)
+end
+
+wait(0.5)
+local Animation3 = Instance.new("Animation")
+Animation3.AnimationId = "rbxassetid://2788306916"
+local LoadAnimation3 = LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid"):LoadAnimation(Animation3)
+LoadAnimation3.Priority = Enum.AnimationPriority.Action
+LoadAnimation3:Play()
+
+wait(0.8)
+Play(4766119678)
+UpperTorso.BodyPosition.Position = LocalPlayer.Character.HumanoidRootPart.Position 
+    game.Players[target].Character.UpperTorso:FindFirstChild("BodyPosition"):Destroy()
+            game.Players[target].Character.UpperTorso:FindFirstChild("BodyGyro"):Destroy()
+            game:GetService('RunService'):UnbindFromRenderStep("Pos")
+        for i = 1,2 do
+            wait()
+            Play(8164951181)
+            game.Players[target].Character.UpperTorso.Velocity = Vector3.new(
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector.X * 950,
+    100,
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector.Z * 150
+)
+            wait(0.1)
+            part3:Destroy()
+            game.Players[target].Character.LowerTorso.Position = Vector3.new(0,-600,0)
+            wait(0.2)
+            game.Players[target].Character.UpperTorso.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.RightVector * 90
+            game.Players[target].Character.RightUpperLeg.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.RightVector * -90
+            game.Players[target].Character.LeftUpperLeg.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.RightVector * -90
+            end         
+            wait(1)
+            game:GetService("ReplicatedStorage").MainEvent:FireServer('Grabbing', false)
+        end
+    end
+end)
