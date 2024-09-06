@@ -15,6 +15,57 @@ StarterGui:SetCore("SendNotification", {
 })
 
 --//------------------------------------------------------------------------------------------\\--
+local camera = workspace.CurrentCamera
+
+local function setupEffects()
+    local colorCorrection = camera:FindFirstChildOfClass("ColorCorrectionEffect")
+    if not colorCorrection then
+        colorCorrection = Instance.new("ColorCorrectionEffect")
+        colorCorrection.Parent = camera
+    end
+    colorCorrection.TintColor = Color3.fromRGB(255, 255, 255)
+    colorCorrection.Saturation = -0.7
+    colorCorrection.Contrast = 1.2
+    colorCorrection.Brightness = 0.6
+
+    local additionalColorCorrection = camera:FindFirstChild("AdditionalColorCorrection")
+    if not additionalColorCorrection then
+        additionalColorCorrection = Instance.new("ColorCorrectionEffect")
+        additionalColorCorrection.Name = "AdditionalColorCorrection"
+        additionalColorCorrection.Parent = camera
+    end
+    additionalColorCorrection.TintColor = Color3.fromRGB(255, 255, 255)
+    additionalColorCorrection.Saturation = -1
+    additionalColorCorrection.Contrast = 0.6
+    additionalColorCorrection.Brightness = 0.3
+
+    local blurEffect = camera:FindFirstChildOfClass("BlurEffect")
+    if not blurEffect then
+        blurEffect = Instance.new("BlurEffect")
+        blurEffect.Parent = camera
+    end
+    blurEffect.Size = 1
+end
+--//------------------------------------------------------------------------------------------\\-- SOUND FIXED BY ticxyylolz#9164
+TweenService = game:GetService("TweenService")
+OWNER = game:GetService("Players").LocalPlayer
+--//------------------------------------------------------------------------------------------\\--
+local OriginalKeyUpValue = 0
+function StopAudio()
+    game:GetService("ReplicatedStorage"):WaitForChild("MainEvent"):FireServer("BoomboxStop")
+end
+--//------------------------------------------------------------------------------------------\\--
+function stop(ID, Key)
+    local cor = coroutine.wrap(function()
+        wait(OWNER.Character.LowerTorso.BOOMBOXSOUND.TimeLength-0.1)
+        if OWNER.Character.LowerTorso.BOOMBOXSOUND.SoundId == "rbxassetid://"..ID and OriginalKeyUpValue == Key then
+            StopAudio()
+        end
+    end)
+    cor()
+end
+
+--//------------------------------------------------------------------------------------------\\--
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
